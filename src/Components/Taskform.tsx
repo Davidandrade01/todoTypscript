@@ -14,9 +14,10 @@ interface Props{
     btnText:string,
     tasklist:ITask[],
     setTasklist?:React.Dispatch<React.SetStateAction<ITask[]>>
+    handleUpdate?():null
 }
 
-const Taskform = ({btnText,tasklist,setTasklist}:Props) => {
+const Taskform = ({btnText,tasklist,setTasklist,handleUpdate}:Props) => {
 
   const [id,setId]=useState<number>(0)
   const[title,setTitle]=useState<string>("")
@@ -24,6 +25,11 @@ const Taskform = ({btnText,tasklist,setTasklist}:Props) => {
 
   const addTaskhandler =(e:FormEvent<HTMLFormElement>)=>{
 
+   if(handleUpdate){
+    console.log(handleUpdate)
+
+   }
+   else{
     e.preventDefault()
     const id=Math.floor(Math.random()*1000) //Geração de Id assim que submeter/clicar
     const newTask:ITask={id, title,difficulty  }
@@ -31,7 +37,7 @@ const Taskform = ({btnText,tasklist,setTasklist}:Props) => {
    setTasklist!([...tasklist,newTask])
    setTitle("")
    setDifficulty(0) 
-
+   }
    console.log(tasklist)
   }
 
