@@ -1,23 +1,70 @@
 import React from 'react'
+import {useState,ChangeEvent,FormEvent,useEffect } from "react"
+
+
+//Interfaces
+
+import { ITask } from "@/interfaces/task"
+
+//Styles
+
+import  styles from '../styles/taskform.module.css'
 
 interface Props{
-    btnText:string
+    btnText:string,
+    tasklist:ITask[],
+    setTasklist?:React.Dispatch<React.SetStateAction<ITask[]>>
 }
 
-const Taskform = ({btnText}:Props) => {
+const Taskform = ({btnText,tasklist,setTasklist}:Props) => {
+
+  const [id,setId]=useState<number>(0)
+  const[title,setTitle]=useState<string>("")
+  const[difficulty,setDifficulty]=useState<number>(0)
+
+  const addTaskhandler =(e:FormEvent<HTMLFormElement>)=>{
+
+    e.preventDefault()
+    const id=Math.floor(Math.random()*1000) //Geração de Id assim que submeter/clicar
+    const newTask:ITask={id, title,difficulty  }
+
+   setTasklist!([...tasklist,newTask])
+   setTitle("")
+   setDifficulty(0) 
+
+   console.log(tasklist)
+  }
+
+  const handleChange=(e:ChangeEvent<HTMLInputElement>)=>{
+    if(e.target.name==="title"){
+      setTitle(e.target.value)
+    }
+
+    else{
+      setDifficulty(parseInt(e.target.value))
+    }
+
+    console.log(title)
+    console.log(difficulty)
+  }
+
+
+
   return (
-    <form  >
-        <div>
-        <label htmlFor='title'>Título</label>
-        <input type='text'name='title' placeholder='Título da tarefa '></input>
+    <form onSubmit={addTaskhandler} className={styles.form} >
+        <div className={styles.input_container}>
+        <label className={styles.input_container_label} htmlFor='title'>Título</label>
+        <input onChange={handleChange} className={styles.form_input} 
+        type='text'name='title' placeholder='Título da tarefa ' value={title}></input>
         </div>
 
-        <div>
-        <label htmlFor='dificulty'>Dificuldade</label>
-        <input type='text'name='title' placeholder='TDificuldade da tarefa '></input>
+        <div className={styles.input_container}>
+        <label className={styles.input_container_label}  htmlFor='difficulty'>Dificuldade</label>
+        <input onChange={handleChange}  className={styles.form_input} 
+        type='text'name='difficulty' placeholder='Dificuldade da tarefa ' value={difficulty}></input>
         </div>
 
-            <input type="submit" value={btnText} />
+            <input className={styles.form_input} type="submit" value={btnText} />
 
     </form>
   )
